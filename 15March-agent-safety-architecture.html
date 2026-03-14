@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Safety & Responsible Design - Day 5 | Great Learning</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Great Learning Header Branding */
+        .gl-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 1400px;
+        }
+        .gl-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .gl-logo svg { height: 50px; }
+        .gl-badge {
+            background: linear-gradient(135deg, #1E88E5 0%, #0D47A1 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .slide { min-height: 100vh; padding: 40px 60px; background: white; margin: 20px auto; max-width: 1400px; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); page-break-after: always; }
+        h1 { color: #0078d4; font-size: 2.4em; margin-bottom: 10px; border-bottom: 4px solid #0078d4; padding-bottom: 15px; }
+        h2 { color: #323130; font-size: 1.8em; margin: 30px 0 15px; }
+        h3 { color: #0078d4; font-size: 1.3em; margin: 25px 0 12px; }
+        h4 { color: #323130; font-size: 1.1em; margin-bottom: 10px; }
+        .subtitle { color: #605e5c; font-size: 1.1em; margin-bottom: 25px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 20px 0; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .card { background: #f8f9fa; border-radius: 8px; padding: 20px; border-left: 4px solid #0078d4; }
+        .card.blue { border-left-color: #0078d4; background: #f0f8ff; }
+        .card.orange { border-left-color: #ff8c00; background: #fff8f0; }
+        .card.purple { border-left-color: #8764b8; background: #f8f0ff; }
+        .card.green { border-left-color: #107c10; background: #f0fff0; }
+        .card.red { border-left-color: #d13438; background: #fff0f0; }
+        ul { margin-left: 20px; line-height: 1.8; }
+        li { margin: 6px 0; }
+        
+        /* Architecture Diagram Styles */
+        .arch-container { background: #1e1e1e; color: white; padding: 30px; border-radius: 12px; margin: 25px 0; }
+        .arch-layer { background: linear-gradient(135deg, #2d2d2d, #1a1a1a); padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 5px solid; position: relative; }
+        .arch-layer.critical { border-left-color: #dc3545; }
+        .arch-layer.warning { border-left-color: #ffc107; }
+        .arch-layer.info { border-left-color: #17a2b8; }
+        .arch-layer.success { border-left-color: #28a745; }
+        
+        .highlight { background: #0078d4; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.85em; }
+        .day-badge { background: #0078d4; color: white; padding: 8px 20px; border-radius: 25px; font-size: 1.1em; display: inline-block; }
+        
+        @media print { .slide { box-shadow: none; margin: 0; page-break-after: always; } body { background: white; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- SLIDE 1: Title -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <div style="display: flex; flex-direction: column; justify-content: center; height: 85vh; text-align: center;">
+        <span class="day-badge">Day 5</span>
+        <h1 style="font-size: 3em; border: none; text-align: center; color: #1a1a2e; margin-top: 30px;">AI Agent Safety & Responsible Design</h1>
+        <p class="subtitle" style="font-size: 1.5em; margin: 20px 0; color: #0078d4;">Architecture-Driven Approach to Building Trustworthy AI Systems</p>
+        <div style="margin-top: 40px;">
+            <span class="highlight">Risk Mitigation</span>
+            <span class="highlight">Guardrails & Human Oversight</span>
+            <span class="highlight">Observability Design</span>
+            <span class="highlight">Explainability & Safe Interaction</span>
+        </div>
+    </div>
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+
+<!-- SLIDE 2: Risk Mitigation Architecture -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <h1>🛡️ Risk Mitigation in Agent Design</h1>
+    <p class="subtitle">Guardrails, Output Filtering & Human-in-Loop Checkpoints</p>
+
+    <h2>Multi-Layered Defense Architecture</h2>
+    <div class="arch-container">
+        <h3 style="color: white; margin-bottom: 20px;">4-Layer Defense-in-Depth Strategy</h3>
+        
+        <div class="arch-layer critical">
+            <h4 style="color: white;">Layer 1: Input Validation & Sanitization</h4>
+            <div class="grid-3" style="margin-top: 15px;">
+                <div style="background: rgba(220,53,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #ff6b6b;">Schema Validation</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Type checking, required fields, format validation, range constraints</p>
+                </div>
+                <div style="background: rgba(220,53,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #ff6b6b;">Injection Prevention</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Prompt injection detection, SQL injection blocks, XSS prevention</p>
+                </div>
+                <div style="background: rgba(220,53,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #ff6b6b;">Content Safety</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Harmful content detection, PII identification, profanity filtering</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arch-layer warning">
+            <h4 style="color: white;">Layer 2: Business Logic Controls</h4>
+            <div class="grid-3" style="margin-top: 15px;">
+                <div style="background: rgba(255,193,7,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #ffd93d;">Rate Limiting</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Request throttling, quota management, burst protection</p>
+                </div>
+                <div style="background: rgba(255,193,7,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #ffd93d;">Circuit Breakers</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Failure detection, automatic cutoff, graceful degradation</p>
+                </div>
+                <div style="background: rgba(255,193,7,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #ffd93d;">Anomaly Detection</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Behavioral analysis, pattern recognition, outlier identification</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arch-layer info">
+            <h4 style="color: white;">Layer 3: Compliance & Governance</h4>
+            <div class="grid-3" style="margin-top: 15px;">
+                <div style="background: rgba(23,162,184,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #4dabf7;">Audit Logging</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Complete decision trails, immutable logs, regulatory compliance</p>
+                </div>
+                <div style="background: rgba(23,162,184,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #4dabf7;">Access Control</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">RBAC, least privilege, authentication, authorization</p>
+                </div>
+                <div style="background: rgba(23,162,184,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #4dabf7;">Data Governance</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Retention policies, encryption, data classification</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arch-layer success">
+            <h4 style="color: white;">Layer 4: Human Oversight</h4>
+            <div class="grid-3" style="margin-top: 15px;">
+                <div style="background: rgba(40,167,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #51cf66;">Escalation Triggers</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Low confidence, high stakes, regulatory flags, anomalies</p>
+                </div>
+                <div style="background: rgba(40,167,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #51cf66;">Approval Workflows</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Tiered review, SLA tracking, feedback loops</p>
+                </div>
+                <div style="background: rgba(40,167,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #51cf66;">Override Mechanisms</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Manual intervention, emergency stops, rollback capabilities</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Output Filtering Pipeline</h3>
+    <div class="arch-container">
+        <h4 style="color: white; margin-bottom: 15px;">Multi-Stage Filtering Architecture</h4>
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.85em; line-height: 1.6;">
+┌─────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌─────────────┐
+│  Raw LLM    │ ──► │  Stage 1:    │ ──► │  Stage 2:    │ ──► │  Stage 3:    │ ──► │    Safe     │
+│   Output    │     │   Syntax     │     │   Content    │     │     PII      │     │   Output    │
+│             │     │  Validation  │     │    Safety    │     │   Masking    │     │             │
+└─────────────┘     └──────────────┘     └──────────────┘     └──────────────┘     └─────────────┘
+                           │                     │                     │
+                           ▼                     ▼                     ▼
+                    Format checks         Pattern-based          Regex patterns
+                    JSON validation       ML-based models        Entity recognition
+                    Length limits         Rule-based logic       Data redaction
+        </pre>
+    </div>
+
+    <h3>Human-in-the-Loop Decision Flow</h3>
+    <div class="arch-container">
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.85em; line-height: 1.6;">
+┌─────────────────┐
+│  Agent Decision │
+└────────┬────────┘
+         │
+         ▼
+    ┌────────────┐
+    │ Confidence │ ──── > 90% ────► Auto-Approve
+    │   Score    │
+    └────────────┘
+         │
+         │ 70-90%
+         ▼
+    ┌────────────┐
+    │ Risk Score │ ──── Low ──────► Auto-Approve
+    │ Assessment │ ──── Medium ───► Tier 1 Review (Junior Analyst)
+    └────────────┘ ──── High ─────► Tier 2 Review (Senior Analyst)
+         │
+         │ < 70%
+         ▼
+    ┌────────────┐
+    │  Mandatory │ ──────────────► Tier 3 Review (Compliance Officer)
+    │   Human    │
+    │   Review   │
+    └────────────┘
+        </pre>
+    </div>
+
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+
+<!-- SLIDE 3: Observability Architecture -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <h1>📊 Designing for Observability</h1>
+    <p class="subtitle">Telemetry Hooks & Prompt Logging Architecture</p>
+
+    <h2>Three Pillars of Observability</h2>
+    <div class="grid-3">
+        <div class="card blue">
+            <h4>📈 Metrics</h4>
+            <ul>
+                <li><strong>Performance:</strong> Latency (P50, P95, P99), Throughput</li>
+                <li><strong>Business:</strong> Approval rate, Decision quality</li>
+                <li><strong>Model:</strong> Confidence scores, Drift detection</li>
+                <li><strong>Resource:</strong> Token usage, Cost per request</li>
+            </ul>
+        </div>
+        <div class="card orange">
+            <h4>📝 Logs</h4>
+            <ul>
+                <li><strong>Structured:</strong> JSON format, Correlation IDs</li>
+                <li><strong>Prompts:</strong> Input/output pairs (PII-masked)</li>
+                <li><strong>Decisions:</strong> Reasoning chains, Confidence</li>
+                <li><strong>Audit:</strong> Complete decision trails</li>
+            </ul>
+        </div>
+        <div class="card purple">
+            <h4>🔍 Traces</h4>
+            <ul>
+                <li><strong>Distributed:</strong> End-to-end request flow</li>
+                <li><strong>Dependencies:</strong> Service call chains</li>
+                <li><strong>Performance:</strong> Bottleneck identification</li>
+                <li><strong>Debugging:</strong> Error propagation paths</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>Telemetry Hooks Architecture</h2>
+    <div class="arch-container">
+        <h3 style="color: white; margin-bottom: 20px;">Event-Driven Instrumentation</h3>
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.8em; line-height: 1.6;">
+┌──────────────────────────────────────────────────────────────┐
+│                    Agent Execution Flow                       │
+└──────────────────────────────────────────────────────────────┘
+
+    Request Received
+         │
+         ▼
+    [Hook: pre_request]  ──► Log: Request metadata, User context
+         │                    Metric: Request counter
+         ▼
+    Input Validation
+         │
+         ▼
+    [Hook: post_validation]  ──► Metric: Validation success/failure
+         │                        Log: Validation errors
+         ▼
+    LLM Invocation
+         │
+         ▼
+    [Hook: pre_llm]  ──► Log: Prompt (PII-masked), Model params
+         │                Trace: Start span "llm_call"
+         ▼
+    Model Response
+         │
+         ▼
+    [Hook: post_llm]  ──► Log: Response, Tokens, Latency
+         │                 Metric: Token count, Cost, Latency
+         │                 Trace: End span "llm_call"
+         ▼
+    Output Filtering
+         │
+         ▼
+    [Hook: post_filter]  ──► Log: Filter results, Blocked content
+         │                     Metric: Filter hit rate
+         ▼
+    Decision Logic
+         │
+         ▼
+    [Hook: pre_decision]  ──► Trace: Decision context
+         │                     Log: Decision inputs
+         ▼
+    Final Decision
+         │
+         ▼
+    [Hook: post_decision]  ──► Log: Decision + reasoning
+         │                      Metric: Confidence score
+         │                      Trace: Complete request span
+         ▼
+    Response Sent
+        </pre>
+    </div>
+
+    <h2>Prompt Logging Strategy</h2>
+    <div class="grid-2">
+        <div class="card green">
+            <h4>✅ What to Log</h4>
+            <ul>
+                <li>Request context (User ID hashed, Session ID, Timestamp)</li>
+                <li>Input prompt (PII-masked)</li>
+                <li>System prompt (Instructions, constraints)</li>
+                <li>Model response (PII-masked)</li>
+                <li>Metadata (Model name, temperature, tokens)</li>
+                <li>Performance (Latency, cost)</li>
+                <li>Decision (Output, confidence, reasoning)</li>
+            </ul>
+        </div>
+        <div class="card red">
+            <h4>⛔ What NOT to Log</h4>
+            <ul>
+                <li>PII (SSN, credit cards, personal identifiers)</li>
+                <li>Credentials (Passwords, API keys, tokens)</li>
+                <li>Financial data (Account balances, transactions)</li>
+                <li>Health information (Medical records)</li>
+                <li>Biometric data (Fingerprints, facial data)</li>
+                <li>Sensitive business data (Trade secrets)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+<!-- SLIDE 4: Explainability Architecture -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <h1>🔍 Explainability-by-Design Principles</h1>
+    <p class="subtitle">Building Transparent & Interpretable AI Systems</p>
+
+    <h2>Multi-Level Explanation Framework</h2>
+    <div class="arch-container">
+        <h3 style="color: white; margin-bottom: 20px;">4-Level Explainability Architecture</h3>
+        
+        <div class="arch-layer success">
+            <h4 style="color: white;">Level 1: Decision Transparency</h4>
+            <div class="grid-3" style="margin-top: 15px;">
+                <div style="background: rgba(40,167,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #51cf66;">What</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Final decision made</p>
+                    <p style="font-size: 0.85em; margin-top: 5px; color: #aaa;">Example: "Loan Approved"</p>
+                </div>
+                <div style="background: rgba(40,167,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #51cf66;">Why</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">High-level reasoning</p>
+                    <p style="font-size: 0.85em; margin-top: 5px; color: #aaa;">Example: "Strong credit profile"</p>
+                </div>
+                <div style="background: rgba(40,167,69,0.2); padding: 15px; border-radius: 6px;">
+                    <strong style="color: #51cf66;">Confidence</strong>
+                    <p style="font-size: 0.9em; margin-top: 8px;">Certainty level</p>
+                    <p style="font-size: 0.85em; margin-top: 5px; color: #aaa;">Example: "92% confidence"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="arch-layer info">
+            <h4 style="color: white;">Level 2: Feature Attribution (SHAP/LIME)</h4>
+            <div style="background: rgba(23,162,184,0.2); padding: 15px; border-radius: 6px; margin-top: 15px;">
+                <strong style="color: #4dabf7;">Quantify Each Feature's Contribution</strong>
+                <ul style="font-size: 0.9em; margin-top: 10px; color: #ccc;">
+                    <li>Credit Score: +0.35 (35% positive weight)</li>
+                    <li>Debt-to-Income Ratio: +0.25 (25% positive weight)</li>
+                    <li>Employment History: +0.20 (20% positive weight)</li>
+                    <li>Down Payment: +0.15 (15% positive weight)</li>
+                    <li>Recent Credit Inquiry: -0.05 (5% negative weight)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="arch-layer warning">
+            <h4 style="color: white;">Level 3: Counterfactual Analysis</h4>
+            <div style="background: rgba(255,193,7,0.2); padding: 15px; border-radius: 6px; margin-top: 15px;">
+                <strong style="color: #ffd93d;">What-If Scenarios</strong>
+                <p style="font-size: 0.9em; margin-top: 10px; color: #ccc;">Show minimal changes for different outcome:</p>
+                <ul style="font-size: 0.85em; margin-top: 10px; color: #ccc;">
+                    <li><strong>Current:</strong> Rejected (Credit Score: 650, DTI: 45%)</li>
+                    <li><strong>Scenario 1:</strong> If credit score were 680 → Approved</li>
+                    <li><strong>Scenario 2:</strong> If DTI were 35% → Approved</li>
+                    <li><strong>Scenario 3:</strong> If down payment were 25% → Approved</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="arch-layer critical">
+            <h4 style="color: white;">Level 4: Natural Language Explanation</h4>
+            <div style="background: rgba(220,53,69,0.2); padding: 15px; border-radius: 6px; margin-top: 15px;">
+                <strong style="color: #ff6b6b;">Human-Readable Summary</strong>
+                <p style="font-size: 0.9em; margin-top: 10px; color: #ccc; font-style: italic;">
+                    "Your loan application was approved with 92% confidence. The primary factors were your excellent credit score of 780, low debt-to-income ratio of 28%, and stable employment history of 8 years. Your 25% down payment further strengthened the application."
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h3>Explainability Techniques</h3>
+    <div class="grid-3">
+        <div class="card purple">
+            <h4>SHAP Values</h4>
+            <p><strong>Best For:</strong> Global & local feature importance</p>
+            <p><strong>Pros:</strong> Theoretically sound, consistent</p>
+            <p><strong>Cons:</strong> Computationally expensive</p>
+        </div>
+        <div class="card blue">
+            <h4>LIME</h4>
+            <p><strong>Best For:</strong> Local explanations</p>
+            <p><strong>Pros:</strong> Fast, intuitive, model-agnostic</p>
+            <p><strong>Cons:</strong> Can be unstable</p>
+        </div>
+        <div class="card orange">
+            <h4>Counterfactuals</h4>
+            <p><strong>Best For:</strong> Actionable insights</p>
+            <p><strong>Pros:</strong> Practical, easy to understand</p>
+            <p><strong>Cons:</strong> May not reflect true model</p>
+        </div>
+    </div>
+
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+
+<!-- SLIDE 5: Safe Interaction Design & Fallback Routing -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <h1>🛡️ Safe Interaction Design & Fallback Routing</h1>
+    <p class="subtitle">Circuit Breakers & Resilience Patterns</p>
+
+    <h2>Circuit Breaker State Machine</h2>
+    <div class="arch-container">
+        <h3 style="color: white; margin-bottom: 20px;">State Transition Architecture</h3>
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.85em; line-height: 1.8;">
+                    ┌─────────────┐
+                    │   CLOSED    │  ◄── Normal Operation
+                    │  (Healthy)  │      All requests pass through
+                    └──────┬──────┘
+                           │
+                           │ Failure threshold exceeded
+                           │ (e.g., 5 failures in 60s)
+                           ▼
+                    ┌─────────────┐
+                    │    OPEN     │  ◄── Circuit Tripped
+                    │  (Failing)  │      All requests blocked
+                    └──────┬──────┘      Return cached/default
+                           │
+                           │ Timeout period elapsed
+                           │ (e.g., 30 seconds)
+                           ▼
+                    ┌─────────────┐
+                    │ HALF-OPEN   │  ◄── Testing Recovery
+                    │  (Testing)  │      Limited requests allowed
+                    └──────┬──────┘
+                           │
+                ┌──────────┴──────────┐
+                │                     │
+         Success threshold      Failure detected
+         (e.g., 3 successes)    (any failure)
+                │                     │
+                ▼                     ▼
+         Back to CLOSED         Back to OPEN
+        </pre>
+
+        <div class="grid-2" style="margin-top: 20px;">
+            <div style="background: #2d2d2d; padding: 15px; border-radius: 6px;">
+                <strong style="color: #51cf66;">Configuration</strong>
+                <ul style="font-size: 0.9em; margin-top: 10px; color: #ccc;">
+                    <li>Failure Threshold: 5 failures</li>
+                    <li>Time Window: 60 seconds</li>
+                    <li>Timeout Period: 30 seconds</li>
+                    <li>Success Threshold: 3 successes</li>
+                    <li>Half-Open Requests: 10% of normal</li>
+                </ul>
+            </div>
+            <div style="background: #2d2d2d; padding: 15px; border-radius: 6px;">
+                <strong style="color: #ffd93d;">Failure Criteria</strong>
+                <ul style="font-size: 0.9em; margin-top: 10px; color: #ccc;">
+                    <li>HTTP 5xx errors</li>
+                    <li>Timeout (>5 seconds)</li>
+                    <li>Connection refused</li>
+                    <li>Invalid response format</li>
+                    <li>Rate limit exceeded</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h2>Multi-Level Fallback Architecture</h2>
+    <div class="arch-container">
+        <h3 style="color: white; margin-bottom: 20px;">Cascading Fallback Strategy</h3>
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.8em; line-height: 1.6;">
+┌─────────────────────────────────────────────────────────────────┐
+│                    Request Processing Flow                       │
+└─────────────────────────────────────────────────────────────────┘
+
+    Incoming Request
+         │
+         ▼
+    ┌──────────────────┐
+    │  Primary System  │  ◄── GPT-4 Agent (Full AI Decision)
+    │   (Tier 1)       │      • Best quality
+    └────────┬─────────┘      • Highest cost
+             │                • 99% availability target
+             │
+             │ Circuit Open / Timeout
+             ▼
+    ┌──────────────────┐
+    │ Fallback Level 1 │  ◄── GPT-3.5 Agent (Faster, Cheaper)
+    │   (Tier 2)       │      • Good quality
+    └────────┬─────────┘      • Lower cost
+             │                • 95% availability target
+             │
+             │ Circuit Open / Timeout
+             ▼
+    ┌──────────────────┐
+    │ Fallback Level 2 │  ◄── Rule-Based Engine
+    │   (Tier 3)       │      • Deterministic logic
+    └────────┬─────────┘      • No AI dependency
+             │                • 99.9% availability
+             │
+             │ System Failure
+             ▼
+    ┌──────────────────┐
+    │ Fallback Level 3 │  ◄── Cached Decisions
+    │   (Tier 4)       │      • Historical patterns
+    └────────┬─────────┘      • Read-only
+             │                • Always available
+             │
+             │ No Cache Hit
+             ▼
+    ┌──────────────────┐
+    │ Fallback Level 4 │  ◄── Human Escalation
+    │   (Tier 5)       │      • Manual review queue
+    └──────────────────┘      • SLA-based processing
+        </pre>
+    </div>
+
+    <h3>Graceful Degradation Patterns</h3>
+    <div class="grid-3">
+        <div class="card green">
+            <h4>🎯 Feature Degradation</h4>
+            <p>Reduce functionality while maintaining core service</p>
+            <ul style="font-size: 0.9em; margin-top: 10px;">
+                <li>Disable advanced features</li>
+                <li>Simplify decision logic</li>
+                <li>Use cached recommendations</li>
+            </ul>
+        </div>
+        <div class="card blue">
+            <h4>⚡ Performance Degradation</h4>
+            <p>Accept slower response times to maintain availability</p>
+            <ul style="font-size: 0.9em; margin-top: 10px;">
+                <li>Increase timeout limits</li>
+                <li>Queue non-urgent requests</li>
+                <li>Async responses</li>
+            </ul>
+        </div>
+        <div class="card orange">
+            <h4>🔄 Quality Degradation</h4>
+            <p>Accept lower quality to maintain service</p>
+            <ul style="font-size: 0.9em; margin-top: 10px;">
+                <li>Use simpler models</li>
+                <li>Reduce confidence threshold</li>
+                <li>Approximate results</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+<!-- SLIDE 6: Resilience Patterns -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <h1>🔄 Advanced Resilience Patterns</h1>
+    <p class="subtitle">Retry, Timeout & Bulkhead Strategies</p>
+
+    <h2>Retry Pattern with Exponential Backoff</h2>
+    <div class="arch-container">
+        <h3 style="color: white; margin-bottom: 20px;">Intelligent Retry Strategy</h3>
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.85em; line-height: 1.6;">
+Attempt 1: Immediate
+    │
+    ├─ Success ──► Return Result
+    │
+    └─ Failure ──► Wait 1 second
+                   │
+                   ▼
+Attempt 2: After 1s
+    │
+    ├─ Success ──► Return Result
+    │
+    └─ Failure ──► Wait 2 seconds (exponential)
+                   │
+                   ▼
+Attempt 3: After 2s
+    │
+    ├─ Success ──► Return Result
+    │
+    └─ Failure ──► Wait 4 seconds (exponential)
+                   │
+                   ▼
+Attempt 4: After 4s
+    │
+    ├─ Success ──► Return Result
+    │
+    └─ Failure ──► Wait 8 seconds (exponential)
+                   │
+                   ▼
+Attempt 5: After 8s (Final)
+    │
+    ├─ Success ──► Return Result
+    │
+    └─ Failure ──► Trigger Fallback
+        </pre>
+    </div>
+
+    <h2>Bulkhead Pattern</h2>
+    <div class="arch-container">
+        <h3 style="color: white; margin-bottom: 20px;">Resource Isolation Architecture</h3>
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.8em; line-height: 1.6;">
+┌────────────────────────────────────────────────────────────┐
+│                    Agent System Resources                   │
+└────────────────────────────────────────────────────────────┘
+
+┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+│  Bulkhead 1      │  │  Bulkhead 2      │  │  Bulkhead 3      │
+│  Critical Ops    │  │  Standard Ops    │  │  Batch Ops       │
+├──────────────────┤  ├──────────────────┤  ├──────────────────┤
+│ Thread Pool: 20  │  │ Thread Pool: 50  │  │ Thread Pool: 30  │
+│ Memory: 4GB      │  │ Memory: 8GB      │  │ Memory: 4GB      │
+│ Connections: 50  │  │ Connections: 100 │  │ Connections: 30  │
+│                  │  │                  │  │                  │
+│ • Loan approval  │  │ • Account query  │  │ • Report gen     │
+│ • Fraud detect   │  │ • Balance check  │  │ • Data export    │
+│ • High-value tx  │  │ • Transaction    │  │ • Analytics      │
+└──────────────────┘  └──────────────────┘  └──────────────────┘
+
+If Bulkhead 3 fails → Bulkheads 1 & 2 unaffected
+        </pre>
+    </div>
+
+    <h3>Timeout Strategy</h3>
+    <div class="grid-3">
+        <div class="card purple">
+            <h4>⏱️ Connection Timeout</h4>
+            <p><strong>Purpose:</strong> Limit time to establish connection</p>
+            <p><strong>Value:</strong> 5 seconds</p>
+            <p><strong>Action:</strong> Retry with backoff</p>
+        </div>
+        <div class="card orange">
+            <h4>⏱️ Request Timeout</h4>
+            <p><strong>Purpose:</strong> Limit complete request/response time</p>
+            <p><strong>Value:</strong> 30 seconds</p>
+            <p><strong>Action:</strong> Cancel and fallback</p>
+        </div>
+        <div class="card green">
+            <h4>⏱️ Idle Timeout</h4>
+            <p><strong>Purpose:</strong> Close inactive connections</p>
+            <p><strong>Value:</strong> 60 seconds</p>
+            <p><strong>Action:</strong> Release resources</p>
+        </div>
+    </div>
+
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+<!-- SLIDE 7: Summary -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <div style="display: flex; flex-direction: column; justify-content: center; height: 85vh; text-align: center;">
+        <h1 style="font-size: 3em; border: none; color: #1a1a2e;">Key Architectural Principles</h1>
+        <p class="subtitle" style="font-size: 1.3em; margin: 30px 0; color: #0078d4;">Building Safe, Transparent & Resilient AI Agents</p>
+        
+        <div class="grid-2" style="max-width: 1200px; margin: 40px auto; text-align: left;">
+            <div class="card">
+                <h3 style="color: #0078d4;">🛡️ Defense-in-Depth</h3>
+                <p>Implement 4-layer protection: Input validation, Business logic controls, Compliance & governance, Human oversight. Never rely on a single layer.</p>
+            </div>
+            <div class="card blue">
+                <h3 style="color: #0078d4;">🚧 Guardrails & Filtering</h3>
+                <p>Multi-stage output filtering with pattern-based, ML-based, and rule-based techniques. Human-in-the-loop for high-stakes decisions.</p>
+            </div>
+            <div class="card orange">
+                <h3 style="color: #ff8c00;">📊 Observability by Design</h3>
+                <p>Three pillars: Metrics, Logs, Traces. Instrument every decision point with telemetry hooks. Secure prompt logging with PII masking.</p>
+            </div>
+            <div class="card purple">
+                <h3 style="color: #8764b8;">🔍 Explainability Matters</h3>
+                <p>4-level framework: Decision transparency, Feature attribution (SHAP/LIME), Counterfactual analysis, Natural language explanations.</p>
+            </div>
+            <div class="card green">
+                <h3 style="color: #107c10;">🔄 Resilience Patterns</h3>
+                <p>Circuit breakers, Multi-level fallbacks, Retry with exponential backoff, Bulkheads, Graceful degradation for 99.9% availability.</p>
+            </div>
+            <div class="card red">
+                <h3 style="color: #d13438;">⚖️ Compliance Ready</h3>
+                <p>Audit trails, Access controls, Data governance, Regulatory compliance built into architecture from day one.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; font-size: 1.1em; color: #323130;">
+            <p><strong>Remember:</strong> Safety, transparency, and resilience are foundational architectural requirements, not optional features.</p>
+        </div>
+    </div>
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+<!-- SLIDE 8: Azure Responsible AI Ecosystem -->
+<div class="slide">
+    <div class="gl-header" style="margin-bottom: 30px;">
+        <div class="gl-logo">
+            <svg width="180" height="56" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10 C8 10, 2 22, 2 32 C2 45, 10 52, 22 52 C30 52, 36 48, 38 40 L26 40 L26 34 L46 34 L46 42 C42 54, 32 60, 20 60 C4 60, -6 46, -6 32 C-6 18, 6 4, 22 4 C34 4, 42 10, 44 18 L34 22 C32 18, 28 14, 22 14 C12 14, 6 22, 6 32 C6 42, 12 50, 22 50 C30 50, 34 46, 36 40 L26 40 L26 34" fill="#1E88E5" transform="translate(5,0)"/>
+                <text x="55" y="28" font-family="Segoe UI" font-size="18" font-weight="600" fill="#1E88E5">Great</text>
+                <text x="55" y="48" font-family="Segoe UI" font-size="18" font-weight="600" fill="#0D47A1">Learning</text>
+                <text x="55" y="62" font-family="Segoe UI" font-size="8" letter-spacing="2" fill="#666">POWER AHEAD</text>
+            </svg>
+        </div>
+        <div class="gl-badge">Azure AI Workshop Series</div>
+    </div>
+    <h1>☁️ Azure Responsible AI Ecosystem</h1>
+    <p class="subtitle">End-to-End Architecture for Safe AI Agent Deployment</p>
+
+    <h2>Azure Responsible AI Services Stack</h2>
+    <div class="grid-3">
+        <div class="card blue">
+            <h4>🎯 Development & Testing</h4>
+            <ul style="font-size: 0.9em;">
+                <li><strong>Azure AI Foundry:</strong> Model catalog, Prompt Flow, Safety evaluations</li>
+                <li><strong>Content Safety:</strong> Input/output filtering, Jailbreak detection</li>
+                <li><strong>Responsible AI Dashboard:</strong> Fairness, Explainability metrics</li>
+            </ul>
+        </div>
+        <div class="card green">
+            <h4>🔒 Security & Governance</h4>
+            <ul style="font-size: 0.9em;">
+                <li><strong>Azure Key Vault:</strong> Secrets, Keys, Certificates</li>
+                <li><strong>Managed Identity:</strong> Passwordless authentication</li>
+                <li><strong>Azure Policy:</strong> Compliance enforcement</li>
+                <li><strong>Azure Purview:</strong> Data governance</li>
+            </ul>
+        </div>
+        <div class="card orange">
+            <h4>📊 Monitoring & Compliance</h4>
+            <ul style="font-size: 0.9em;">
+                <li><strong>Azure Monitor:</strong> Metrics, Alerts, Dashboards</li>
+                <li><strong>Application Insights:</strong> Distributed tracing</li>
+                <li><strong>Log Analytics:</strong> Audit trails, Compliance</li>
+                <li><strong>Azure Sentinel:</strong> Security monitoring</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>End-to-End Request Flow with Azure Services</h3>
+    <div class="arch-container">
+        <pre style="color: #51cf66; font-family: monospace; font-size: 0.7em; line-height: 1.5;">
+User Request
+     │
+     ▼
+┌──────────────────┐
+│ Azure Front Door │ ──► WAF, DDoS Protection, SSL/TLS Termination
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ API Management   │ ──► Rate Limiting, OAuth 2.0, Request Validation
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Content Safety   │ ──► Input Filtering (Hate, Violence, Sexual, Self-harm)
+│ (Pre-processing) │     Jailbreak Detection, PII Detection
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Azure Functions  │ ──► Agent Runtime, Business Logic
+│ (Agent Runtime)  │     Managed Identity for Auth
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Azure OpenAI     │ ──► GPT-4o with Built-in Content Filters
+│ Service          │     Abuse Monitoring, Token Tracking
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Content Safety   │ ──► Output Filtering, PII Masking
+│ (Post-processing)│     Harmful Content Detection
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Application      │ ──► Distributed Tracing, Performance Metrics
+│ Insights         │     Custom Events, Dependencies
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Log Analytics    │ ──► Audit Trail, Compliance Reporting
+│ Workspace        │     Long-term Storage, KQL Queries
+└────────┬─────────┘
+         │
+         ▼
+    Response to User
+
+All layers monitored by Azure Monitor + Azure Sentinel for security threats
+        </pre>
+    </div>
+
+    <h3>Azure AI Content Safety Integration</h3>
+    <div class="grid-2">
+        <div class="card purple">
+            <h4>Input Safety Checks</h4>
+            <ul style="font-size: 0.9em;">
+                <li><strong>Hate:</strong> Detect discriminatory language</li>
+                <li><strong>Violence:</strong> Identify violent content</li>
+                <li><strong>Sexual:</strong> Flag inappropriate content</li>
+                <li><strong>Self-harm:</strong> Detect harmful instructions</li>
+                <li><strong>Jailbreak:</strong> Block prompt injection attempts</li>
+                <li><strong>Custom Blocklists:</strong> Domain-specific filtering</li>
+            </ul>
+        </div>
+        <div class="card red">
+            <h4>Output Safety Checks</h4>
+            <ul style="font-size: 0.9em;">
+                <li><strong>Content Filtering:</strong> Same categories as input</li>
+                <li><strong>PII Detection:</strong> SSN, Credit cards, Phone numbers</li>
+                <li><strong>Groundedness:</strong> Verify against source documents</li>
+                <li><strong>Protected Material:</strong> Copyright detection</li>
+                <li><strong>Custom Analysis:</strong> Business-specific rules</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>Azure Monitor & Application Insights</h3>
+    <div class="grid-3">
+        <div class="card blue">
+            <h4>📈 Metrics to Track</h4>
+            <ul style="font-size: 0.85em;">
+                <li>Request latency (P50, P95, P99)</li>
+                <li>Token usage & costs</li>
+                <li>Content filter hit rate</li>
+                <li>Error rates by category</li>
+                <li>Model confidence scores</li>
+            </ul>
+        </div>
+        <div class="card green">
+            <h4>📝 Logs to Capture</h4>
+            <ul style="font-size: 0.85em;">
+                <li>Request/Response (PII-masked)</li>
+                <li>Content filter decisions</li>
+                <li>Model parameters used</li>
+                <li>User context (hashed)</li>
+                <li>Decision reasoning</li>
+            </ul>
+        </div>
+        <div class="card orange">
+            <h4>🔍 Traces to Monitor</h4>
+            <ul style="font-size: 0.85em;">
+                <li>End-to-end request flow</li>
+                <li>Service dependencies</li>
+                <li>External API calls</li>
+                <li>Database queries</li>
+                <li>Cache hit/miss rates</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7em; color: #666;">
+        <strong>© Great Learning. All Rights Reserved.</strong>
+    </div>
+</div>
+
+</div>
+</body>
+</html>
